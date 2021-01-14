@@ -1,0 +1,46 @@
+# -*- coding: utf-8 -*-
+"""
+Spyder Editor
+
+This is a temporary script file.
+"""
+annual_salary = float(input('Annual salary = '))
+semi_annual_raise = 0.07
+
+total_cost = 1000000
+downpayment = total_cost*0.25
+
+current_savings = 0
+max_months = 36
+
+steps_bisection_search = 0
+high = 10000
+low = 0  
+guess_saving_rate= (high + low)//2/10000 
+
+
+def saving(current_savings,annual_salary,guess_saving_rate,semi_annual_raise):
+    for i in range(max_months):
+        current_savings += annual_salary/12*guess_saving_rate + current_savings*0.04/12
+        i +=1
+        if i % 6 == 0:
+            annual_salary += annual_salary*semi_annual_raise
+    return current_savings
+
+ 
+current_savings = saving(current_savings, annual_salary, high/10000, semi_annual_raise) 
+if current_savings < downpayment:
+    print('Starting salary,', '$', annual_salary, ', cannot save enough for down payment in 36 months')
+else:
+    current_savings = saving(0, annual_salary, guess_saving_rate, semi_annual_raise) 
+    steps_bisection_search = 1
+    while abs(current_savings - downpayment) > 100:
+        if current_savings < downpayment:
+            low = guess_saving_rate*10000 
+        elif current_savings > downpayment:
+            high = guess_saving_rate*10000
+        guess_saving_rate = (high+low)//2/10000
+        current_savings = saving(0, annual_salary, guess_saving_rate, semi_annual_raise)
+        steps_bisection_search += 1
+    print('Best saving rate: ', guess_saving_rate)
+    print('Steps in bisection search:', steps_bisection_search)
